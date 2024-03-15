@@ -27,7 +27,7 @@ export default defineConfig(({ command, mode }) => {
 
   let buildOption = {
     // target: 'es2015',//配合 plugin-legacy 支持传统浏览器
-    outDir: path.join(__dirname, "dist"),
+    outDir: path.join(__dirname, "docs"),
     cssCodeSplit: true, // 如果设置为false，整个项目中的所有 CSS 将被提取到一个 CSS 文件中
     drop: command === "build" ? ["console", "debugger"] : [],
     rollupOptions: {

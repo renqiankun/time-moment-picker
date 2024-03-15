@@ -1,6 +1,6 @@
 {
   "name": "time-moment-picker",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "private": false,
   "type": "module",
   "main": "./lib/time-moment-picker.cjs",
@@ -13,14 +13,15 @@
   "files": [
     "lib",
     "package.json",
-    "README.md"
+    "README.md",
+    "*.png"
   ],
   "scripts": {
     "dev": "vite",
-    "build": "run-p type-check \"build-only {@}\" --",
+    "build-check": "run-p type-check \"build-only {@}\" --",
     "build:lib": "vite build --mode=lib",
     "preview": "vite preview",
-    "build-only": "vite build",
+    "build": "vite build",
     "type-check": "vue-tsc --build --force"
   },
   "dependencies": {
