@@ -327,14 +327,17 @@ const clearCatchData = () => {
 };
 const confirmDataHand = () => {
   visible.value = false;
-  if (props.isRange) {
-    emits("update:modelValue", [formatStartTime.value, formatEndTime.value]);
-  } else {
-    emits("update:modelValue", formatStartTime.value);
+  let value:any = ''
+  if(props.isRange){
+    value = [formatStartTime.value, formatEndTime.value]
+  }else{
+    value = formatStartTime.value
   }
+  emits("update:modelValue", value);
   clearCatchData();
+  emits("change",);
 };
-const emits = defineEmits(["update:modelValue"]);
+const emits = defineEmits(["update:modelValue","change"]);
 </script>
 
 <style lang="scss" scoped>
