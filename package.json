@@ -1,6 +1,6 @@
 {
   "name": "time-moment-picker",
-  "version": "0.0.1",
+  "version": "0.0.4",
   "private": false,
   "type": "module",
   "main": "./lib/time-moment-picker.cjs",
@@ -13,8 +13,7 @@
   "files": [
     "lib",
     "package.json",
-    "README.md",
-    "*.png"
+    "README.md"
   ],
   "scripts": {
     "dev": "vite",
