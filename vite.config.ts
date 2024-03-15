@@ -15,7 +15,7 @@ export default defineConfig(({ command, mode }) => {
     outDir: path.join(__dirname, "lib"),
     drop: command === "build" ? ["console", "debugger"] : [],
     rollupOptions: {
-      external: ["vue","element-plus"],
+      external: ["vue","element-plus","@element-plus/icons-vue"],
       output: {
         manualChunks: undefined,
         globals: {
