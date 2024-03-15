@@ -1,5 +1,6 @@
 基于vue3、element-plus的时刻选择器， 支持24:00
 支持校验
+预览：https://renqiankun.github.io/time-moment-picker/
 git: https://github.com/renqiankun/time-moment-picker
 
     安装
