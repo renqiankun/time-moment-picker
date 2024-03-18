@@ -1,54 +1,57 @@
 <template>
+  <div
+    class="el-date-editor el-date-editor el-date-editor--timerange el-input__wrapper el-range-editor"
+    :class="{ 'is-active': visible, 'is-disabled': disabled }"
+    @mouseenter="isHover = true"
+    @mouseleave="isHover = false"
+    ref="buttonRef"
+    v-click-outside="onClickOutside"
+  >
+    <el-icon class="el-input__icon el-range__icon"><Clock /></el-icon>
+    <input
+      :placeholder="isRange ? startPlaceholder : placeholder"
+      readonly
+      class="el-range-input"
+      :value="startTime"
+    />
+    <span v-if="isRange" class="el-range-separator">{{ rangeSeparator }}</span>
+    <input
+      :placeholder="endPlaceholder"
+      readonly
+      v-if="isRange"
+      class="el-range-input"
+      :value="endTime"
+    />
+    <el-icon
+      @click.stop="clearDataHand"
+      class="el-input__icon el-range__close-icon"
+      :class="{
+        'el-range__close-icon--hidden': !(
+          modelValue &&
+          modelValue?.length !== 0 &&
+          isHover &&
+          !disabled &&
+          !readonly
+        ),
+      }"
+      ><CircleClose
+    /></el-icon>
+  </div>
   <el-popover
+    ref="popoverRef"
+    :virtual-ref="buttonRef"
+    virtual-triggering
     trigger="click"
     :disabled="disabled || readonly"
-    v-model:visible="visible"
     :width="isRange ? 350 : 220"
     :hide-after="0"
     :persistent="persistent"
     :transition="transition"
     v-bind="$attrs"
+    @before-enter="visible=true"
+    @before-leave="visible=false"
   >
-    <template #reference>
-      <div
-        class="el-date-editor el-date-editor el-date-editor--timerange el-input__wrapper el-range-editor"
-        :class="{ 'is-active': visible, 'is-disabled': disabled }"
-        @mouseenter="isHover = true"
-        @mouseleave="isHover = false"
-      >
-        <el-icon class="el-input__icon el-range__icon"><Clock /></el-icon>
-        <input
-          :placeholder="isRange ? startPlaceholder : placeholder"
-          readonly
-          class="el-range-input"
-          :value="startTime"
-        />
-        <span v-if="isRange" class="el-range-separator">{{
-          rangeSeparator
-        }}</span>
-        <input
-          :placeholder="endPlaceholder"
-          readonly
-          v-if="isRange"
-          class="el-range-input"
-          :value="endTime"
-        />
-        <el-icon
-          @click.stop="clearDataHand"
-          class="el-input__icon el-range__close-icon"
-          :class="{
-            'el-range__close-icon--hidden': !(
-              modelValue &&
-              modelValue?.length !== 0 &&
-              isHover &&
-              !disabled &&
-              !readonly
-            ),
-          }"
-          ><CircleClose
-        /></el-icon>
-      </div>
-    </template>
+    <template #reference> </template>
     <rangePicker>
       <div class="base-picker-wrap">
         <div class="picker-spin-container">
@@ -102,41 +105,45 @@
 <script setup lang="ts">
 import rangePicker from "./range-picker.vue";
 import pickerBase from "./picker-base.vue";
-import { computed, ref, watch } from "vue";
-import { ElIcon ,useFormItem} from "element-plus";
+import { computed, ref, unref, watch } from "vue";
+import {
+  ElIcon,
+  useFormItem,
+  ClickOutside as vClickOutside,
+} from "element-plus";
 import { Clock, CircleClose } from "@element-plus/icons-vue";
 const { formItem } = useFormItem();
 const props = withDefaults(
   defineProps<{
-  modelValue: string | Array<string>;
-  isRange?: boolean;
-  common?: boolean;
+    modelValue: string | Array<string>;
+    isRange?: boolean;
+    common?: boolean;
 
-  beginStartHour?: number;
-  beginEndHour?: number;
-  beginStartMinute?: number;
-  beginEndMinute?: number;
+    beginStartHour?: number;
+    beginEndHour?: number;
+    beginStartMinute?: number;
+    beginEndMinute?: number;
 
-  endStartHour?: number;
-  endStartMinute?: number;
-  endEndHour?: number;
-  endEndMinute?: number;
+    endStartHour?: number;
+    endStartMinute?: number;
+    endEndHour?: number;
+    endEndMinute?: number;
 
-  hourStep?: number;
-  minuteStep?: number;
+    hourStep?: number;
+    minuteStep?: number;
 
-  disabled?: boolean;
-  readonly?: boolean;
+    disabled?: boolean;
+    readonly?: boolean;
 
-  placeholder?: string;
-  startPlaceholder?: string;
-  endPlaceholder?: string;
+    placeholder?: string;
+    startPlaceholder?: string;
+    endPlaceholder?: string;
 
-  rangeSeparator?: string;
-  timeSeparator?: string;
-  persistent?: boolean;
-  transition?: string;
-}>(),
+    rangeSeparator?: string;
+    timeSeparator?: string;
+    persistent?: boolean;
+    transition?: string;
+  }>(),
   {
     beginStartHour: 0,
     beginEndHour: 23,
@@ -184,10 +191,15 @@ watch(
     formItem?.validate("change");
   }
 );
-let visible = ref(false);
-const handleClick = () => {
-  visible.value = true;
+const buttonRef = ref();
+const popoverRef = ref();
+const onClickOutside = () => {
+  unref(popoverRef).popperRef?.delayHide?.();
 };
+let visible = ref(false);
+const closePoper = () => {
+  popoverRef.value?.hide();
+}
 let startTime = computed(() => {
   if (props.isRange) {
     return props.modelValue?.[0];
@@ -296,8 +308,8 @@ const changeStartMinuteHand = () => {
 
 const changeEndHoutHand = () => {
   // 结束小时数选择24时 清除00
-  if(props.endEndHour == endHour.value && props.endEndHour == 24){
-    endMinute.value = "00"
+  if (props.endEndHour == endHour.value && props.endEndHour == 24) {
+    endMinute.value = "00";
   }
   if (
     !startHour.value ||
@@ -315,7 +327,6 @@ const changeEndHoutHand = () => {
       endMinute.value = "";
     }
   }
-  
 };
 
 const clearDataHand = () => {
@@ -331,18 +342,18 @@ const clearCatchData = () => {
   currentEndMinute.value = null;
 };
 const confirmDataHand = () => {
-  visible.value = false;
-  let value:any = ''
-  if(props.isRange){
-    value = [formatStartTime.value, formatEndTime.value]
-  }else{
-    value = formatStartTime.value
+  let value: any = "";
+  if (props.isRange) {
+    value = [formatStartTime.value, formatEndTime.value];
+  } else {
+    value = formatStartTime.value;
   }
   emits("update:modelValue", value);
   clearCatchData();
-  emits("change",);
+  emits("change");
+  closePoper();
 };
-const emits = defineEmits(["update:modelValue","change",'clear']);
+const emits = defineEmits(["update:modelValue", "change", "clear"]);
 </script>
 
 <style lang="scss" scoped>
