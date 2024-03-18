@@ -316,6 +316,7 @@ const changeEndHoutHand = () => {
 const clearDataHand = () => {
   clearCatchData();
   emits("update:modelValue", props.isRange ? [] : "");
+  emits("clear");
 };
 
 const clearCatchData = () => {
@@ -336,7 +337,7 @@ const confirmDataHand = () => {
   clearCatchData();
   emits("change",);
 };
-const emits = defineEmits(["update:modelValue","change"]);
+const emits = defineEmits(["update:modelValue","change",'clear']);
 </script>
 
 <style lang="scss" scoped>
