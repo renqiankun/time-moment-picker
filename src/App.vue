@@ -2,7 +2,7 @@
   <!-- <el-time-picker readonly is-range></el-time-picker> -->
   <br />
   常规1
-  <timeRangePicker v-model="time" />
+  <timeRangePicker v-model="time" @change="changeHand" @clear="clearHand"/>
   <timeRangePicker :beginEndHour="24" v-model="time24" />
   <br />
   <br />
@@ -63,7 +63,12 @@ let time24 = ref('')
 let time2 = ref([]);
 let time3 = ref([]);
 let time4 = ref([]);
+const changeHand = (e:any)=>{
+  console.log(e)
+}
+const clearHand= ()=>{
 
+}
 let dataForm = reactive({
   origin: "",
   times: "",
