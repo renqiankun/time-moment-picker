@@ -97,7 +97,11 @@ let minutList = computed(() => {
 
 // 当前最大的分钟
 let maxMinute = computed(() => {
-  return minutList.value[minutList.value.length - 1];
+  let list = [];
+  for (let i = props.startMinute; i <= props.endMinute; i += (props.minuteStep||1)) {
+    list.push(i < 10 ? "0" + i : i + "");
+  }
+  return list[list.length - 1];
 });
 // watch(
 //   () => props.minTime,

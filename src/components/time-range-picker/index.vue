@@ -295,6 +295,10 @@ const changeStartMinuteHand = () => {
 };
 
 const changeEndHoutHand = () => {
+  // 结束小时数选择24时 清除00
+  if(props.endEndHour == endHour.value && props.endEndHour == 24){
+    endMinute.value = "00"
+  }
   if (
     !startHour.value ||
     !startMinute.value ||
@@ -311,6 +315,7 @@ const changeEndHoutHand = () => {
       endMinute.value = "";
     }
   }
+  
 };
 
 const clearDataHand = () => {
