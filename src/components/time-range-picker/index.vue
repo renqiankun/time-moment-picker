@@ -303,11 +303,11 @@ const changeEndHoutHand = () => {
   )
     return;
   if (!props.common) {
-    if (formatStartTime.value > formatEndTime.value) {
+    if (formatStartTime.value >= formatEndTime.value) {
       endMinute.value = "";
     }
   } else {
-    if (formatStartTime.value >= formatEndTime.value) {
+    if (formatStartTime.value > formatEndTime.value) {
       endMinute.value = "";
     }
   }
