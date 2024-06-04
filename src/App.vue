@@ -2,7 +2,7 @@
   <!-- <el-time-picker readonly is-range></el-time-picker> -->
   <br />
   常规1
-  <timeRangePicker v-model="time" @change="changeHand" @clear="clearHand"/>
+  <timeRangePicker startMaxTime="18:30" startMinTime="08:15" v-model="time" @change="changeHand" @clear="clearHand"/>
   <timeRangePicker :beginEndHour="24" v-model="time24" />
   <br />
   <br />
@@ -24,6 +24,9 @@
     :end-end-hour="24"
     is-range
     v-model="time3"
+    common
+    startMaxTime="18:15" startMinTime="08:15" 
+    endMaxTime="18:15" endMinTime="08:15"
   />
 
   <br />

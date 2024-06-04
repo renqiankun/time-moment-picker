@@ -67,6 +67,8 @@
             title="开始时间"
             @change-hour="changeStartHoutHand"
             @change-minute="changeStartMinuteHand"
+            :startMaxTime="startMaxTime"
+            :startMinTime="startMinTime"
           />
         </div>
         <div v-if="isRange" class="picker-spin-container right-pannel">
@@ -83,6 +85,8 @@
             title="结束时间"
             :common="common"
             @change-hour="changeEndHoutHand"
+            :startMaxTime="endMaxTime"
+            :startMinTime="endMinTime"
           />
         </div>
       </div>
@@ -143,6 +147,12 @@ const props = withDefaults(
     timeSeparator?: string;
     persistent?: boolean;
     transition?: string;
+  
+    startMaxTime?:string // 最大时间
+    startMinTime?:string  // 最小时间
+
+    endMaxTime?:string   // range时 右侧最大时间
+    endMinTime?:string   // range时 右侧最小时间
   }>(),
   {
     beginStartHour: 0,

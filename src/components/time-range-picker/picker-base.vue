@@ -62,6 +62,9 @@ const props = withDefaults(
     common?: boolean; // 允许开始结束相同
     timeSeparator?:string
     maxHour?:string
+
+    startMaxTime?:string
+    startMinTime?:string
   }>(),
   {
     startHour: 0,
@@ -120,35 +123,69 @@ let maxMinute = computed(() => {
 // );
 let hourDisabled = computed(() => {
   return (hour: any) => {
-    if (!props.minTime) return false;
-    if ((props.minTime?.split?.(timeSeparator)?.length ?? 0) === 0) return false;
+    // 若存在最大 最小 小时 则只能在此区间
+    let disabledMaxHour = props.startMaxTime?.split?.(timeSeparator)?.[0];
+    let disabledMinHour = props.startMinTime?.split?.(timeSeparator)?.[0];
+
+    let disabledMax = false // 是否在禁用范围内
+    let disabledMin = false // 是否在禁用范围内
+    if(disabledMaxHour){
+      disabledMax =  hour > disabledMaxHour
+    }
+    if(disabledMinHour){
+      disabledMin = hour < disabledMinHour
+    }
+    let disabledRange = disabledMax || disabledMin
+    if (!props.minTime) return disabledRange;
+    if ((props.minTime?.split?.(timeSeparator)?.length ?? 0) === 0) return disabledRange;
     let beginHour = props.minTime?.split?.(timeSeparator)?.[0];
     let beginMinut = props.minTime?.split?.(timeSeparator)?.[1];
     if(beginHour && beginMinut && !props.common){
-      return `${hour}${timeSeparator}${maxMinute.value}` <= props.minTime
+      return `${hour}${timeSeparator}${maxMinute.value}` <= props.minTime || disabledRange
     }
-    return hour < beginHour;
+    return hour < beginHour || disabledRange;
   };
 });
 
 let minutDisabled = computed(() => {
   return (minut: any) => {
-    if (!props.minTime || !props.currentHour) return false;
-    if ((props.minTime?.split?.(timeSeparator)?.length ?? 0) === 0) return false;
+   
+
+    if(!props.currentHour) return false
+    // 当前的完整时间
+    let currentTime = `${props.currentHour}${timeSeparator}${minut}`
+
+     // 若存在最大 最小 时间 则只能在此区间
+    let disabledMaxHour = props.startMaxTime
+    let disabledMinHour = props.startMinTime
+    let disabledMax = false // 是否在禁用范围内
+    let disabledMin = false // 是否在禁用范围内
+    if(disabledMaxHour){
+      disabledMax =  currentTime > disabledMaxHour
+    }
+    if(disabledMinHour){
+      disabledMin = currentTime < disabledMinHour
+    }
+    let disabledRange = disabledMax || disabledMin
+
+
+    if(!props.minTime) return disabledRange
+    if ((props.minTime?.split?.(timeSeparator)?.length ?? 0) === 0) return disabledRange;
     let beginHour = props.minTime?.split?.(timeSeparator)?.[0];
     let beginMinut = props.minTime?.split?.(timeSeparator)?.[1];
-    if (!beginMinut || !beginHour) return false;
+    if (!beginMinut || !beginHour) return disabledRange;
     if (!props.common) {
-      return props.minTime >= `${props.currentHour}${timeSeparator}${minut}`;
+      return props.minTime >= currentTime ||disabledRange;
     }
-    return props.minTime > `${props.currentHour}${timeSeparator}${minut}`;
+    return props.minTime > currentTime || disabledRange;
   };
 });
 const changeHour = (item: any) => {
   emits("update:currentHour", item);
-  if (item == maxHour) {
-    emits("update:currentMinute", "00");
-  }
+  // if (item == maxHour) {
+  //   emits("update:currentMinute", "00");
+  // }
+  emits("update:currentMinute", "");
   emits("changeHour", item);
 };
 const changeMinute = (item: any) => {
