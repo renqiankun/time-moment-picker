@@ -28,7 +28,7 @@ git: https://github.com/renqiankun/time-moment-picker
     modelValue: string | Array<string>;
     isRange?: boolean;
     common?: boolean;  // range时 左右是否可相同
-
+    clearable?boolean;
     beginStartHour?: number;   // 起始小时
     beginEndHour?: number;
     beginStartMinute?: number;

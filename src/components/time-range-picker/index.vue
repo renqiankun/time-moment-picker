@@ -24,6 +24,7 @@
     />
     <el-icon
       @click.stop="clearDataHand"
+      v-if="clearable" 
       class="el-input__icon el-range__close-icon"
       :class="{
         'el-range__close-icon--hidden': !(
@@ -91,7 +92,7 @@
         </div>
       </div>
       <template #btn>
-        <el-button @click="clearDataHand" bg text size="small">清除</el-button>
+        <el-button v-if="clearable" @click="clearDataHand" bg text size="small">清除</el-button>
         <el-button
           :disabled="!confirmUseAble"
           bg
@@ -122,7 +123,7 @@ const props = withDefaults(
     modelValue: string | Array<string>;
     isRange?: boolean;
     common?: boolean;
-
+    clearable?:boolean;
     beginStartHour?: number;
     beginEndHour?: number;
     beginStartMinute?: number;
@@ -155,6 +156,7 @@ const props = withDefaults(
     endMinTime?:string   // range时 右侧最小时间
   }>(),
   {
+    clearable:true,
     beginStartHour: 0,
     beginEndHour: 23,
     beginStartMinute: 0,
